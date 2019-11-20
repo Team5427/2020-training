@@ -7,12 +7,17 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.PWMVictorSPX;
+import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.ExampleSubsystem;
 
 /**
@@ -25,9 +30,21 @@ import frc.robot.subsystems.ExampleSubsystem;
 public class Robot extends TimedRobot {
   public static ExampleSubsystem m_subsystem = new ExampleSubsystem();
   public static OI m_oi;
-
+  
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();
+
+  SpeedController backLeft;
+  SpeedController backRight;
+  SpeedController frontLeft;
+  SpeedController frontRight;
+
+  SpeedControllerGroup right;
+  SpeedControllerGroup left;
+
+  DifferentialDrive drivebase;
+
+  public static DriveTrain driveTrain;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -35,10 +52,21 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    m_oi = new OI();
     m_chooser.setDefaultOption("Default Auto", new ExampleCommand());
     // chooser.addOption("My Auto", new MyAutoCommand());
     SmartDashboard.putData("Auto mode", m_chooser);
+    
+    backLeft = new PWMVictorSPX(RobotMap.BACK_LEFT);
+    backRight = new PWMVictorSPX(RobotMap.BACK_RIGHT);
+    frontLeft = new PWMVictorSPX(RobotMap.FRONT_LEFT);
+    frontRight = new PWMVictorSPX(RobotMap.FRONT_LEFT);
+
+    right = new SpeedControllerGroup(frontRight, backRight);
+    left = new SpeedControllerGroup(frontLeft, backLeft);
+
+    driveTrain = new DriveTrain(left, right);
+    //callRobot = new DriveTrain(left, right);
+    m_oi = new OI();
   }
 
   /**
