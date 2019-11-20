@@ -10,11 +10,17 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ExampleSubsystem;
-
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PWMVictorSPX;
+import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import frc.robot.subsystems.DriveTrain;
+import frc.robot.commands.DriveForward;
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the TimedRobot
@@ -25,6 +31,18 @@ import frc.robot.subsystems.ExampleSubsystem;
 public class Robot extends TimedRobot {
   public static ExampleSubsystem m_subsystem = new ExampleSubsystem();
   public static OI m_oi;
+  //(attributes)
+  SpeedController frontLeft;
+  SpeedController frontRight;
+  SpeedController backLeft;
+  SpeedController backRight;
+
+  SpeedControllerGroup left;
+  SpeedControllerGroup right;
+
+  DifferentialDrive driveBase;
+
+  public static DriveTrain driveTrain;
 
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -39,6 +57,20 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("Default Auto", new ExampleCommand());
     // chooser.addOption("My Auto", new MyAutoCommand());
     SmartDashboard.putData("Auto mode", m_chooser);
+    frontLeft = new PWMVictorSPX(RobotMap.FRONT_LEFT);
+    frontRight = new PWMVictorSPX(RobotMap.FRONT_RIGHT);
+    backLeft = new PWMVictorSPX(RobotMap.BACK_LEFT);
+    backRight = new PWMVictorSPX(RobotMap.BACK_RIGHT);
+
+    left = new SpeedControllerGroup(frontLeft, backLeft);
+    right = new SpeedControllerGroup(frontRight, backRight);
+
+    driveBase = new DifferentialDrive(left, right);
+
+    driveTrain = new DriveTrain(left, right, driveBase); 
+
+   
+   
   }
 
   /**
@@ -81,6 +113,10 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     m_autonomousCommand = m_chooser.getSelected();
+    double time = 2;
+    new DriveForward(time);
+    
+    
 
     /*
      * String autoSelected = SmartDashboard.getString("Auto Selector",
@@ -112,6 +148,8 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+
   }
 
   /**
@@ -120,6 +158,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     Scheduler.getInstance().run();
+    
   }
 
   /**
@@ -128,4 +167,7 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {
   }
+  
+
+
 }

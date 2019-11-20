@@ -7,11 +7,26 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.buttons.*;
+import frc.robot.commands.DriveForward;
 /**
  * This class is the glue that binds the controls on the physical operator
  * interface to the commands and command groups that allow control of the robot.
  */
 public class OI {
+  public OI(){
+    Joystick joy = new Joystick(0);
+    double valueY = joy.getY();
+    double valueX = joy.getX();
+    double valueZ = joy.getZ();
+    double valueThrottle = joy.getThrottle();
+    double valueTwist = joy.getTwist();
+    Button button1 = new JoystickButton(joy, 0);
+    button1.whenPressed(new DriveForward(5));
+  
+
+  }
   //// CREATING BUTTONS
   // One type of button is a joystick button which is any button on a
   //// joystick.
