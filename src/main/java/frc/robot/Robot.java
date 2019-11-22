@@ -52,14 +52,16 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     
+  
+  frontleft = new PWMVictorSPX(1);
+  frontright = new PWMVictorSPX(3);
+  backright = new PWMVictorSPX(6);
+  backleft = new PWMVictorSPX(0);
   left = new SpeedControllerGroup(frontleft,backleft);
   right = new SpeedControllerGroup(frontright,backright);
-  frontleft = new PWMVictorSPX(0);
-  frontright = new PWMVictorSPX(1);
-  backright = new PWMVictorSPX(2);
-  backleft = new PWMVictorSPX(3);
   driveTrain = new DriveTrain(left,right);
   drive = new DifferentialDrive(left,right);
+  drive.setSafetyEnabled(false);
   callRobot  = new DriveTrain(left,right);// drivebase = new differentialDrive(left, right);
   // driveTrain = new DriveTrain(left,right,drivebase);
     m_oi = new OI();
