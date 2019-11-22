@@ -7,12 +7,18 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.PWMVictorSPX;
+import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.ExampleSubsystem;
 
 /**
@@ -28,6 +34,16 @@ public class Robot extends TimedRobot {
 
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();
+  SpeedController frontLeft;
+  SpeedController frontRight;
+  SpeedController backLeft;
+  SpeedController backRight;
+
+  SpeedControllerGroup left;
+  SpeedControllerGroup right;
+
+  DifferentialDrive drive;
+  public static DriveTrain driveTrain;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -39,6 +55,16 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("Default Auto", new ExampleCommand());
     // chooser.addOption("My Auto", new MyAutoCommand());
     SmartDashboard.putData("Auto mode", m_chooser);
+    frontLeft = new PWMVictorSPX(RobotMap.frontLeftPort);
+    frontRight = new PWMVictorSPX(RobotMap.frontRightPort);
+    backLeft = new PWMVictorSPX(RobotMap.backLeftPort);
+    backRight = new PWMVictorSPX(RobotMap.backRightPort);
+    left = new SpeedControllerGroup(frontLeft, backLeft);
+    right = new SpeedControllerGroup(frontRight, backRight);
+    drive = new DifferentialDrive(left, right);
+    driveTrain = new DriveTrain(left, right, drive);
+    
+
   }
 
   /**
