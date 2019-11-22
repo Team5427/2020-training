@@ -11,7 +11,8 @@ public class MoveForward extends Command {
 
     }
     public void execute(){
-        Robot.driveTrain.run(.3);
+        Robot.driveTrain.left.set(.3);
+        Robot.driveTrain.right.set(-.3);
     }
    
     @Override
