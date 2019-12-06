@@ -7,12 +7,19 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PWMVictorSPX;
+import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.DriveForward;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.ExampleSubsystem;
 
 /**
@@ -25,7 +32,14 @@ import frc.robot.subsystems.ExampleSubsystem;
 public class Robot extends TimedRobot {
   public static ExampleSubsystem m_subsystem = new ExampleSubsystem();
   public static OI m_oi;
-
+  SpeedController frontright;
+  SpeedController backright;
+  SpeedController frontleft;
+  SpeedController backleft;
+  SpeedControllerGroup right;
+  SpeedControllerGroup left;
+ public static DriveTrain driveTrain; 
+  DifferentialDrive driveBase; 
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
@@ -35,10 +49,20 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    m_oi = new OI();
+    
     m_chooser.setDefaultOption("Default Auto", new ExampleCommand());
     // chooser.addOption("My Auto", new MyAutoCommand());
     SmartDashboard.putData("Auto mode", m_chooser);
+    frontleft = new PWMVictorSPX(0);
+    frontright = new PWMVictorSPX(3);
+    backleft = new PWMVictorSPX(1);
+    backright = new PWMVictorSPX(6);
+    left = new SpeedControllerGroup(frontleft, backleft);
+    right = new SpeedControllerGroup(backright, frontright);
+    driveBase = new DifferentialDrive(left, right);
+    driveBase.setSafetyEnabled(false);
+    driveTrain = new DriveTrain(left, right, driveBase);
+    m_oi = new OI();
   }
 
   /**
@@ -81,6 +105,8 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     m_autonomousCommand = m_chooser.getSelected();
+    
+
 
     /*
      * String autoSelected = SmartDashboard.getString("Auto Selector",
@@ -93,6 +119,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.start();
     }
+    System.out.print("AAAAA");
   }
 
   /**
@@ -111,6 +138,8 @@ public class Robot extends TimedRobot {
     // this line or comment it out.
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
+
+
     }
   }
 
