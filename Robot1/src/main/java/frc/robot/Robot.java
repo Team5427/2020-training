@@ -7,17 +7,12 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.PWMVictorSPX;
-import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.ExampleSubsystem;
 
 /**
@@ -30,18 +25,7 @@ import frc.robot.subsystems.ExampleSubsystem;
 public class Robot extends TimedRobot {
   public static ExampleSubsystem m_subsystem = new ExampleSubsystem();
   public static OI m_oi;
-  SpeedControllerGroup left;
-  SpeedControllerGroup right;
 
-  SpeedController backleft;
-  SpeedController backright;
-  SpeedController frontleft;
-  SpeedController frontright;
-  public static DriveTrain driveTrain;
-  DifferentialDrive drive;
-  public static DriveTrain callRobot;
-
-  
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
@@ -51,19 +35,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    frontleft = new PWMVictorSPX(1);
-  frontright = new PWMVictorSPX(3);
-  backright = new PWMVictorSPX(6);
-  backleft = new PWMVictorSPX(0);
-  left = new SpeedControllerGroup(frontleft,backleft);
-  right = new SpeedControllerGroup(frontright,backright);
-  
-  driveTrain = new DriveTrain(left,right);
-  drive = new DifferentialDrive(left,right);
-  drive.setSafetyEnabled(false);
-  callRobot  = new DriveTrain(left,right);// drivebase = new differentialDrive(left, right);
-  // driveTrain = new DriveTrain(left,right,drivebase);
-  drive.setSafetyEnabled(false);
     m_oi = new OI();
     m_chooser.setDefaultOption("Default Auto", new ExampleCommand());
     // chooser.addOption("My Auto", new MyAutoCommand());
@@ -142,13 +113,6 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
   }
-  
-
-
-  
-
-
-
 
   /**
    * This function is called periodically during operator control.
