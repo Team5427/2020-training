@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PWMVictorSPX;
 import edu.wpi.first.wpilibj.SpeedController;
@@ -14,13 +15,17 @@ import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.DriveForward;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.MoveElevatorDown;
+import frc.robot.commands.MoveElevatorUp;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.Intake;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -38,30 +43,44 @@ public class Robot extends TimedRobot {
   SpeedController backleft;
   SpeedControllerGroup right;
   SpeedControllerGroup left;
- public static DriveTrain driveTrain; 
+ public static DriveTrain driveTrain;
+public static Subsystem intakesubsystem; 
   DifferentialDrive driveBase; 
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();
-
-  /**
-   * This function is run when the robot is first started up and should be
-   * used for any initialization code.
-   */
+  public static Intake intakeSubsystem;
+  public static Intake motorPWM_Intake_Left;
+  public static SpeedController motorPWM_Intake_Right;
+  SpeedController leftFlywheel; 
+  SpeedController rightFlywheel;
+  public static SpeedController motorPWM_Elevator_Right;
+  public static SpeedController motorPWM_Elevator_Left;
+  public static MoveElevatorUp mou = new MoveElevatorUp();
+  public static MoveElevatorDown mod = new MoveElevatorDown();
+  public static DigitalInput elevatorLimitSwitchUp;
+  public static DigitalInput elevatorLimitSwitchDown;
   @Override
   public void robotInit() {
     
-    m_chooser.setDefaultOption("Default Auto", new ExampleCommand());
-    // chooser.addOption("My Auto", new MyAutoCommand());
+    elevatorLimitSwitchUp = new DigitalInput(67);
+		elevatorLimitSwitchUp.setSubsystem("ELSU");
+		elevatorLimitSwitchDown = new DigitalInput(76);
+    
     SmartDashboard.putData("Auto mode", m_chooser);
     frontleft = new PWMVictorSPX(0);
     frontright = new PWMVictorSPX(3);
     backleft = new PWMVictorSPX(1);
     backright = new PWMVictorSPX(6);
+    leftFlywheel = new PWMVictorSPX(7);
+    rightFlywheel = new PWMVictorSPX(8);
     left = new SpeedControllerGroup(frontleft, backleft);
     right = new SpeedControllerGroup(backright, frontright);
     driveBase = new DifferentialDrive(left, right);
     driveBase.setSafetyEnabled(false);
     driveTrain = new DriveTrain(left, right, driveBase);
+    intakeSubsystem = new Intake(leftFlywheel, rightFlywheel);
+    motorPWM_Elevator_Left = new PWMVictorSPX(200);
+		motorPWM_Elevator_Right = new PWMVictorSPX(669);
     m_oi = new OI();
   }
 
