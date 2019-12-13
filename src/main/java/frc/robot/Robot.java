@@ -17,7 +17,9 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.MoveForward;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Intake;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -38,11 +40,18 @@ public class Robot extends TimedRobot {
   SpeedController right2;
   SpeedControllerGroup left;
   SpeedControllerGroup right;
+
+  SpeedController flywheelleft;
+  SpeedController flywheelright;
+  
   DifferentialDrive drive;
+
 
   public static DriveTrain driveTrain;
 
 public static Subsystem m_subsystem;
+
+public static Subsystem intake;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -57,18 +66,27 @@ public static Subsystem m_subsystem;
     right2 = new PWMVictorSPX(6);
     left = new SpeedControllerGroup(left1, left2);
     right = new SpeedControllerGroup(right1, right2);
-    driveTrain = new DriveTrain(left, right, drive); 
+
+    flywheelleft = new PWMVictorSPX(7);
+    flywheelright = new PWMVictorSPX(8);
+
     drive = new DifferentialDrive(left, right);  
     drive.setSafetyEnabled(false);
+    driveTrain = new DriveTrain(left, right, drive); 
+    intake = new Intake(5.0, flywheelleft, flywheelright);
+    
     m_oi = new OI();
 }
-
+public void disabledInit() 
+	{
+		Scheduler.getInstance().removeAll();
+	}
 public void disabledPeriodic(){
-    Scheduler.getInstance().run();
+   // Scheduler.getInstance().run();
 }
 
 public void autonomousInit(){
- 
+  new MoveForward(5);
 }
 
 public void autonomousPeriodic(){

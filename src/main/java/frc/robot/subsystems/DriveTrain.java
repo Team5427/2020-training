@@ -10,6 +10,11 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.SpeedController;
+import frc.robot.commands.DriveWithJoystick;
+
+
 
 /**
 * An example subsystem. You can replace me with your own Subsystem.
@@ -17,6 +22,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 public class DriveTrain extends Subsystem {
 public SpeedControllerGroup left;
 public SpeedControllerGroup right;
+
 public DifferentialDrive drive;
 // Put methods for controlling this subsystem
 // here. Call these from Commands.
@@ -25,15 +31,19 @@ this.left = left;
 this.right = right;
 this.drive = drive;
 
+
 }
 
 public void stop() {
 drive.stopMotor();
 
 }
+public void takeJoystickInputs(Joystick joy){
+    drive.arcadeDrive(-joy.getY(), joy.getZ() * .75);
+}
 @Override
 public void initDefaultCommand() {
-// Set the default command for a subsystem here.
-// setDefaultCommand(new MySpecialCommand());
+
+setDefaultCommand(new DriveWithJoystick());
 }
 }

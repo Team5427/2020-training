@@ -10,9 +10,9 @@ public class MoveForward extends Command {
         setTimeout(time);
 
     }
-    public void execute(){
-        Robot.driveTrain.left.set(.3);
-        Robot.driveTrain.right.set(-.3);
+    public void execute(double speed){
+        Robot.driveTrain.left.set(speed);
+        Robot.driveTrain.right.set(-speed);
     }
    
     @Override
@@ -20,10 +20,13 @@ public class MoveForward extends Command {
         return this.isTimedOut();
     }
     public void end(){
-        Robot.driveTrain.stop();
+        Robot.driveTrain.left.set(0.0);
+        Robot.driveTrain.right.set(0.0);
 
     }
     public void interupted(){
+        Robot.driveTrain.left.set(0.0);
+        Robot.driveTrain.right.set(0.0);
         end();
 
     }

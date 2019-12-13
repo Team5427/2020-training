@@ -11,19 +11,26 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import frc.robot.commands.MoveForward;;
+import frc.robot.commands.MoveForward;
+import frc.robot.subsystems.Intake;;
 
 /**
 * This class is the glue that binds the controls on the physical operator
 * interface to the commands and command groups that allow control of the robot.
 */
 public class OI {
-Joystick Joy;
-Button MoveForward;
-public OI() 
-{
-Joy = new Joystick(0); //calls constructor
-MoveForward = new JoystickButton(Joy, 11);
-MoveForward.whenPressed(new MoveForward(5.0));
-}
+    Joystick Joy;
+    Button move;
+    Button intake;
+    public OI() 
+    {
+        Joy = new Joystick(0); //calls constructor
+        move = new JoystickButton(Joy, 11);
+        intake = new JoystickButton(Joy, 10);
+        move.whenPressed(new MoveForward(5.0));
+        intake.whenPressed(new Robot.intake.move(5.0));
+    }
+    public Joystick getjoy(){
+        return Joy;
+    }
 }
