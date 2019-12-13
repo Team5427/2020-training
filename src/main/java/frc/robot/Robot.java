@@ -37,7 +37,7 @@ public class Robot extends TimedRobot {
   SpeedController backright;
   SpeedController frontleft;
   SpeedController frontright;
-  DriveTrain driveTrain;
+  public static DriveTrain driveTrain;
   DifferentialDrive drive;
   public static DriveTrain callRobot;
 
@@ -51,17 +51,18 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    
+    frontleft = new PWMVictorSPX(1);
+  frontright = new PWMVictorSPX(3);
+  backright = new PWMVictorSPX(6);
+  backleft = new PWMVictorSPX(0);
   left = new SpeedControllerGroup(frontleft,backleft);
   right = new SpeedControllerGroup(frontright,backright);
-  frontleft = new PWMVictorSPX(0);
-  frontright = new PWMVictorSPX(1);
-  backright = new PWMVictorSPX(2);
-  backleft = new PWMVictorSPX(3);
+  
   driveTrain = new DriveTrain(left,right);
   drive = new DifferentialDrive(left,right);
   callRobot  = new DriveTrain(left,right);// drivebase = new differentialDrive(left, right);
   // driveTrain = new DriveTrain(left,right,drivebase);
+  drive.setSafetyEnabled(false);
     m_oi = new OI();
     m_chooser.setDefaultOption("Default Auto", new ExampleCommand());
     // chooser.addOption("My Auto", new MyAutoCommand());

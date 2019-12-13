@@ -1,0 +1,28 @@
+ackage org.usfirst.frc.team5427.robot.commands;
+import org.usfirst.frc.team5427.robot.Robot;
+import org.usfirst.frcteam5427.utilCmeline;onfig;
+import org.usfirst.frc.team5427.util.Sameline;
+import edu.wpi.first.wpilibj.command.Command;
+public class IntakeActivateIn extends Command;
+public class IntakeActivate extends Command{
+    public IntakeActivateIn(){
+        recquires(Robot.intakeSubsystem);
+
+    }
+protected void initialize(){
+    this.setInterruptible(true);
+}
+protected void execute(){
+    Robot.intakeSubsystem.setSpeed(Config.Button_Motor_Intake_IN);
+
+}
+protected boolean isFinished(){
+    return Robot.oi.getJoy().getRawButton(Config.BUTTON_MOTOR _INTAKE_IN)
+}
+Protected void end(){
+    Robot.intakeSubsystem.setSpeed(0);
+}
+protected void interrupted(){
+    end();
+}
+}
